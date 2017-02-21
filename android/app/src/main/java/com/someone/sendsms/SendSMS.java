@@ -47,60 +47,9 @@ public class SendSMS extends ReactContextBaseJavaModule {
 
             this.callback = cb;
 
-            String SENT = "SMS_SENT";
-            String DELIVERED = "SMS_DELIVERED";
-
-            PendingIntent sentPI = PendingIntent.getBroadcast(reactContext, 0,
-                    new Intent(SENT), 0);
-
-            PendingIntent deliveredPI = PendingIntent.getBroadcast(reactContext, 0,
-                    new Intent(DELIVERED), 0);
-
-            //---when the SMS has been sent---
-            reactContext.registerReceiver(new BroadcastReceiver(){
-                @Override
-                public void onReceive(Context arg0, Intent arg1) {
-                    switch (getResultCode())
-                    {
-                        case Activity.RESULT_OK:
-                            sendCallback("SMS sent");
-                            break;
-                        case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                            sendCallback("Generic failure");
-                            break;
-                        case SmsManager.RESULT_ERROR_NO_SERVICE:
-                            sendCallback("No service");
-                            break;
-                        case SmsManager.RESULT_ERROR_NULL_PDU:
-                            sendCallback("Null PDU");
-                            break;
-                        case SmsManager.RESULT_ERROR_RADIO_OFF:
-                            sendCallback("Radio off");
-                            break;
-                    }
-                }
-            }, new IntentFilter(SENT));
-
-            //---when the SMS has been delivered---
-            reactContext.registerReceiver(new BroadcastReceiver(){
-                @Override
-                public void onReceive(Context arg0, Intent arg1) {
-                    switch (getResultCode())
-                    {
-                        case Activity.RESULT_OK:
-                            System.out.println("SMS delivered");
-                            sendCallback("SMS delivered");
-                            break;
-                        case Activity.RESULT_CANCELED:
-                            System.out.println("SMS not delivered");
-                            sendCallback("SMS not delivered");
-                            break;
-                    }
-                }
-            }, new IntentFilter(DELIVERED));
-
+       
             SmsManager sms = SmsManager.getDefault();
-            sms.sendTextMessage(phoneNumber, null, message, sentPI, deliveredPI);
+            sms.sendTextMessage(phoneNumber, null, message, null,null);
 
         }catch (Exception e) {
 
